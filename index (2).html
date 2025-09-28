@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moto Camping</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        line-height: 1.8;
+        color: #d4f1c5;
+        text-align: center;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("fundo.jpg") no-repeat center center;
+        background-size: cover;
+        background-attachment: fixed;
+        filter: blur(2px);
+        z-index: -3;
+    }
+
+    .road-line {
+        position: fixed;
+        width: 200%;
+        height: 2px;
+        background: repeating-linear-gradient(to right, #c6e2b3, #c6e2b3 10px, transparent 10px, transparent 20px);
+        top: 70%;
+        left: -50%;
+        transform: rotate(-10deg);
+        opacity: 0.2;
+        z-index: -2;
+    }
+
+    .overlay {
+        background-color: rgba(34, 53, 34, 0.35); 
+        min-height: 100vh;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header {
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    header h1 { 
+        margin: 0; 
+        font-size: 3rem; 
+        color: #c6e2b3; 
+        letter-spacing: 1px; 
+    }
+    header p { 
+        margin-top: 10px; 
+        font-weight: 300; 
+        color: #e0f2d9;
+        font-size: 1.2rem;
+    }
+
+    .compass {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: url('https://cdn-icons-png.flaticon.com/512/2917/2917242.png') no-repeat center center;
+        background-size: contain;
+        transform: rotate(0deg);
+        z-index: 10;
+        transition: transform 0.1s linear;
+    }
+
+    .container { 
+        width: 90%; 
+        max-width: 800px; 
+        margin: auto; 
+        padding: 0 0 50px 0; 
+    }
+
+    .texto { 
+        margin-bottom: 30px; 
+        text-align: justify;
+        padding: 25px 30px;
+        border-radius: 15px;
+        border: 2px solid #2e7d32;
+        background-color: rgba(46, 125, 50, 0.15);
+        color: #e0f2d9;
+        font-size: 1.1rem;
+        position: relative;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 1s ease, transform 1s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .texto:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    }
+
+    .texto h2 { 
+        margin-bottom: 15px; 
+        color: #c6e2b3; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .texto h2 .icon {
+        font-size: 1.5rem;
+        margin-left: 8px;
+    }
+
+    .texto.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .epic-text {
+        font-size: 2rem;
+        color: #e6f5d0;
+        font-weight: 600;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+        margin: 40px 0;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 1s ease, transform 1s ease;
+    }
+    .epic-text.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .threads-btn { 
+        display: inline-block; 
+        background: #2e7d32; 
+        color: #fff; 
+        padding: 14px 24px; 
+        border-radius: 10px; 
+        text-decoration: none; 
+        font-weight: 500; 
+        transition: transform 0.3s ease, background 0.3s ease;
+        margin-bottom: 30px;
+    }
+    .threads-btn:hover { 
+        transform: scale(1.05);
+        background: #1b4f1b; 
+    }
+
+    .pix-box {
+        margin: 30px auto;
+        padding: 20px 25px;
+        border-radius: 15px;
+        border: 2px solid #2e7d32;
+        background-color: rgba(46, 125, 50, 0.15);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        display: inline-block;
+        color: #e0f2d9;
+        font-size: 1.1rem;
+        max-width: 400px;
+        text-align: center;
+    }
+
+    .music-suggestion {
+        margin: 30px auto;
+        padding: 20px 25px;
+        border-radius: 15px;
+        border: 2px solid #2e7d32;
+        background-color: rgba(46, 125, 50, 0.15);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        max-width: 400px;
+        color: #e0f2d9;
+        text-align: center;
+    }
+
+    .music-suggestion input {
+        width: 80%;
+        padding: 8px 10px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        border: 1px solid #2e7d32;
+        outline: none;
+    }
+
+    .music-suggestion button {
+        padding: 8px 14px;
+        border-radius: 10px;
+        border: none;
+        background: #2e7d32;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.3s ease;
+    }
+
+    .music-suggestion button:hover {
+        background: #1b4f1b;
+    }
+
+    footer { 
+        background: rgba(20, 40, 20, 0.8); 
+        color: #d4f1c5; 
+        text-align: center; 
+        padding: 15px;
+        border-top-left-radius: 10px; 
+        border-top-right-radius: 10px; 
+    }
+
+    canvas#dust {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .sound-btn {
+        background: #2e7d32;
+        color: #fff;
+        border: none;
+        padding: 10px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+    .sound-btn:hover {
+        background: #1b4f1b;
+    }
+
+    @media (max-width: 400px) {
+        .epic-text { font-size: 1.5rem; }
+        .texto { padding: 15px; font-size: 1rem; }
+        .texto h2 .icon { font-size: 1.2rem; }
+        .pix-box { font-size: 1rem; padding: 15px 20px; }
+        .music-suggestion input { width: 70%; }
+        .compass { width: 40px; height: 40px; top: 15px; right: 15px; }
+        .sound-btn { padding: 8px 12px; font-size: 0.9rem; }
+    }
+</style>
+</head>
+<body>
+<canvas id="dust"></canvas>
+
+<!-- Botão de volume + play + slider -->
+<div style="position: fixed; top: 20px; left: 20px; display: flex; align-items: center; gap: 10px; z-index: 10;">
+    <button class="sound-btn" id="playBtn">▶️ Play Música</button>
+    <button class="sound-btn" id="soundBtn">🔇</button>
+    <input type="range" id="volumeSlider" min="0" max="100" value="50" style="width:100px;">
+    <div style="color: #c6e2b3; font-size: 0.9rem; text-align: left;">
+        <div><strong>Lose My Head</strong> - RÜFÜS DU SOL</div>
+        <div style="font-size: 0.8rem;">Essa não pode faltar na Playlist 🎵</div>
+    </div>
+</div>
+
+<!-- YouTube API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<iframe id="ambientSound" width="0" height="0"
+    src="https://www.youtube.com/embed/ogWbl7B5KFw?enablejsapi=1&loop=1&playlist=ogWbl7B5KFw&autoplay=1&mute=1"
+    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<div class="road-line" id="roadLine"></div>
+
+<div class="overlay">
+    <header>
+        <h1>Moto Camping</h1>
+        <p>Explorando a liberdade sobre duas rodas e acampando em lugares incríveis</p>
+        <div class="compass"></div>
+    </header>
+
+    <div class="container">
+        <section class="texto">
+            <h2>Bem-vindo! <span class="icon">🧭</span></h2>
+            <p>Essa página mostra um pouco da minha paixão por motos e viagens. Eu sou Jefter e vou realizar minha primeira viagem de moto saindo do meio-oeste catarinense, passando por pontos turísticos como Serra do Corvo Branco, Serra do Rio do Rastro e acampando no Camping do Mirante em Grão Pará/SC.</p>
+        </section>
+
+        <section class="texto">
+            <h2>Acompanhe essa viagem junto comigo</h2>
+            <p>Por aqui irei adicionar fotos, dicas e experiências sobre a viagem, os locais visitados, estradas desafiadoras e acampamentos incríveis. Cada relato será uma oportunidade de compartilhar aventuras e incentivar outros a explorarem o mundo sobre duas rodas!</p>
+        </section>
+
+        <div class="epic-text">
+            Ajude nessa jornada épica
+        </div>
+
+        <a class="threads-btn" href="https://www.threads.com/@jefter_silvat" target="_blank">👉 Me acompanhe no Threads</a>
+
+        <div class="pix-box">
+            💚 Apoie essa jornada!<br>
+            Meu Pix: <strong>(49) 9 9935-6502</strong>
+        </div>
+
+        <div class="music-suggestion">
+            <h3>🎵 Sugira uma música para a playlist</h3>
+            <input type="text" id="musicInput" placeholder="Nome da música e artista..." />
+            <button id="submitMusic">Enviar</button>
+            <p id="musicFeedback" style="margin-top:10px; font-size:0.9rem; color:#e6f5d0;"></p>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Moto Camping - Todos os direitos reservados</p>
+    </footer>
+</div>
+
+<script>
+    // Fade-in elementos
+    const textos = document.querySelectorAll('.texto, .epic-text');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+    textos.forEach(texto => observer.observe(texto));
+
+    // Bússola interativa
+    const compass = document.querySelector('.compass');
+    document.addEventListener('mousemove', e => {
+        const x = e.clientX / window.innerWidth - 0.5;
+        const y = e.clientY / window.innerHeight - 0.5;
+        const angle = Math.atan2(y, x) * (180/Math.PI);
+        compass.style.transform = `rotate(${angle}deg)`;
+    });
+
+    // Partículas de poeira
+    const canvas = document.getElementById('dust');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    const particles = [];
+    for(let i=0;i<100;i++){
+        particles.push({ x: Math.random()*w, y: Math.random()*h, r: Math.random()*2+1, d: Math.random()*0.5 });
+    }
+    function draw(){
+        ctx.clearRect(0,0,w,h);
+        ctx.fillStyle = 'rgba(255,255,255,0.6)';
+        ctx.beginPath();
+        for(let i=0;i<particles.length;i++){
+            const p = particles[i];
+            ctx.moveTo(p.x,p.y);
+            ctx.arc(p.x,p.y,p.r,0,Math.PI*2,true);
+        }
+        ctx.fill();
+        update();
+    }
+    let angle=0;
+    function update(){
+        angle += 0.01;
+        for(let i=0;i<particles.length;i++){
+            const p = particles[i];
+            p.y += Math.cos(angle+p.d)+0.5;
+            p.x += Math.sin(angle)*2;
+            if(p.x>w+5 || p.x<0 || p.y>h){
+                p.x = Math.random()*w;
+                p.y = -10;
+            }
+        }
+    }
+    setInterval(draw,33);
+    window.addEventListener('resize', ()=>{ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; });
+
+    // Player YouTube
+    let player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('ambientSound', {
+            events: {
+                'onReady': function(event) {
+                    event.target.setVolume(50);
+                    event.target.mute();
+                }
+            }
+        });
+    }
+    const playBtn = document.getElementById('playBtn');
+    const soundBtn = document.getElementById('soundBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+
+    playBtn.addEventListener('click', ()=>{
+        if(player){
+            player.unMute();
+            player.playVideo();
+            soundBtn.textContent = "🔊";
+            playBtn.disabled = true;
+            playBtn.textContent = "🎵 Música tocando";
+        }
+    });
+
+    soundBtn.addEventListener('click', ()=>{
+        if(player.isMuted()){
+            player.unMute();
+            soundBtn.textContent = "🔊";
+        } else {
+            player.mute();
+            soundBtn.textContent = "🔇";
+        }
+    });
+
+    volumeSlider.addEventListener('input', ()=>{
+        if(player) player.setVolume(volumeSlider.value);
+    });
+
+    // Sugestão de música
+    const submitMusic = document.getElementById('submitMusic');
+    const musicInput = document.getElementById('musicInput');
+    const musicFeedback = document.getElementById('musicFeedback');
+
+    submitMusic.addEventListener('click', ()=>{
+        if(musicInput.value.trim() !== ''){
+            musicFeedback.textContent = `Obrigado pela sugestão: "${musicInput.value}" 🎶`;
+            musicInput.value = '';
+        } else {
+            musicFeedback.textContent = 'Digite algo antes de enviar!';
+        }
+    });
+</script>
+</body>
+</html>
